@@ -163,7 +163,7 @@
                 0 30px 80px rgba(255, 80, 160, 0.2),
                 0 0 0 1px rgba(255, 160, 200, 0.12),
                 inset 0 1px 0 rgba(255, 255, 255, 0.06);
-            width: 360px;
+            width: 400px;
             margin-top: 50px;
             transition: all 0.3s ease;
             border: 1px solid rgba(255, 180, 210, 0.08);
@@ -173,36 +173,79 @@
             box-shadow: 0 35px 90px rgba(255, 80, 160, 0.3), 0 0 0 1px rgba(255, 160, 200, 0.2);
         }
 
-        /* ===== VISOR ===== */
-        .visor {
+        /* ===== VISOR MELHORADO - MOSTRA A EXPRESSÃO COMPLETA ===== */
+        .visor-container {
             width: 100%;
-            height: 90px;
             background: rgba(12, 5, 12, 0.7);
             border: 1px solid rgba(255, 150, 200, 0.15);
             border-radius: 32px;
-            color: #ffd9e8;
-            font-size: 2.8rem;
-            font-weight: 300;
-            text-align: right;
-            padding: 12px 24px;
-            box-sizing: border-box;
             margin-bottom: 24px;
-            outline: none;
+            padding: 16px 20px;
             box-shadow: inset 0 6px 20px rgba(0, 0, 0, 0.5);
-            letter-spacing: 2px;
             backdrop-filter: blur(4px);
             background: rgba(18, 8, 18, 0.5);
+            min-height: 110px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: flex-end;
             transition: all 0.2s;
-            font-family: 'Segoe UI', 'Quicksand', sans-serif;
         }
 
-        .visor:focus {
+        .visor-container:focus-within {
             border-color: rgba(255, 130, 180, 0.4);
             box-shadow: inset 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 80, 160, 0.05);
         }
 
-        .visor::placeholder {
+        /* Expressão que está sendo digitada */
+        .visor-expressao {
+            width: 100%;
+            color: #ffb0cf;
+            font-size: 1.3rem;
+            font-weight: 300;
+            text-align: right;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            min-height: 30px;
+            line-height: 1.4;
+            font-family: 'Segoe UI', 'Quicksand', sans-serif;
+            letter-spacing: 1px;
+            padding-bottom: 4px;
+            border: none;
+            outline: none;
+            background: transparent;
+            resize: none;
+            color: #ffc8dd;
+        }
+
+        .visor-expressao:empty::before {
+            content: 'Digite sua conta...';
             color: rgba(255, 180, 210, 0.2);
+            font-weight: 200;
+        }
+
+        /* Resultado em destaque */
+        .visor-resultado {
+            width: 100%;
+            color: #fff2f7;
+            font-size: 2.6rem;
+            font-weight: 600;
+            text-align: right;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            min-height: 45px;
+            line-height: 1.2;
+            font-family: 'Segoe UI', 'Quicksand', sans-serif;
+            letter-spacing: 2px;
+            border: none;
+            outline: none;
+            background: transparent;
+            transition: all 0.2s;
+        }
+
+        .visor-resultado:empty::before {
+            content: '0';
+            color: rgba(255, 255, 255, 0.1);
             font-weight: 200;
         }
 
@@ -344,19 +387,39 @@
             background: rgba(200, 100, 160, 0.2);
         }
 
+        /* ===== BOTÃO VÍRGULA ===== */
+        button.ponto {
+            background: rgba(65, 32, 60, 0.5);
+            border-color: rgba(255, 150, 200, 0.05);
+        }
+
+        button.ponto:hover {
+            background: rgba(160, 70, 130, 0.25);
+            border-color: rgba(255, 150, 200, 0.2);
+        }
+
         /* ===== RESPONSIVIDADE ===== */
         @media (max-width: 480px) {
             .calculadora {
-                width: 300px;
+                width: 320px;
                 padding: 22px 16px 26px;
                 border-radius: 40px;
             }
 
-            .visor {
-                font-size: 2.2rem;
-                height: 75px;
-                padding: 10px 18px;
+            .visor-container {
+                min-height: 90px;
+                padding: 12px 16px;
                 border-radius: 26px;
+            }
+
+            .visor-expressao {
+                font-size: 1.0rem;
+                min-height: 24px;
+            }
+
+            .visor-resultado {
+                font-size: 2.0rem;
+                min-height: 36px;
             }
 
             button {
@@ -392,7 +455,7 @@
 
         @media (max-width: 380px) {
             .calculadora {
-                width: 260px;
+                width: 280px;
                 padding: 18px 12px 22px;
                 gap: 10px;
             }
@@ -403,14 +466,23 @@
 
             button {
                 padding: 14px 2px;
-                font-size: 1rem;
+                font-size: 1.0rem;
                 border-radius: 30px;
             }
 
-            .visor {
-                font-size: 1.8rem;
-                height: 65px;
-                padding: 8px 14px;
+            .visor-container {
+                min-height: 75px;
+                padding: 10px 12px;
+            }
+
+            .visor-expressao {
+                font-size: 0.85rem;
+                min-height: 20px;
+            }
+
+            .visor-resultado {
+                font-size: 1.6rem;
+                min-height: 30px;
             }
 
             .nome-isa {
@@ -449,7 +521,10 @@
 
     <!-- ===== CALCULADORA COMPLETA ===== -->
     <div class="calculadora">
-        <input type="text" class="visor" id="visor" readonly placeholder="0">
+        <div class="visor-container">
+            <div class="visor-expressao" id="visorExpressao" contenteditable="false"></div>
+            <div class="visor-resultado" id="visorResultado" contenteditable="false"></div>
+        </div>
 
         <div class="botoes">
             <!-- Linha 1: C, ⌫, %, ÷ -->
@@ -510,7 +585,6 @@
                 bg.appendChild(heart);
             }
 
-            // Corações especiais maiores
             const especiais = ['💖', '💗', '💞', '🩷'];
             for (let i = 0; i < 6; i++) {
                 const heart = document.createElement('div');
@@ -543,142 +617,6 @@
         setInterval(atualizarRelogio, 1000);
 
         // ============================================================
-        // 3. CALCULADORA COMPLETA COM PORCENTAGEM FUNCIONAL
+        // 3. CALCULADORA COMPLETA COM VISOR DE EXPRESSÃO
         // ============================================================
-        const visor = document.getElementById('visor');
-
-        // Inserir valor no visor
-        function inserir(valor) {
-            // Evita começar com operadores inválidos
-            if (visor.value === '' && ['+', '×', '÷', '%', '*', '/'].includes(valor)) return;
-            // Substitui operadores visuais por operadores JS internamente
-            let val = valor;
-            if (val === '×') val = '*';
-            if (val === '÷') val = '/';
-            if (val === '−') val = '-';
-            visor.value += val;
-        }
-
-        // Inserir porcentagem - agora funcional!
-        function inserirPorcentagem() {
-            // Pega o número atual no visor
-            let expressao = visor.value;
-            
-            // Se estiver vazio, não faz nada
-            if (expressao === '') return;
-            
-            // Encontra o último número na expressão
-            // Exemplo: "100+50" -> último número é "50"
-            // Exemplo: "200-30" -> último número é "30"
-            const match = expressao.match(/([\d.]+)$/);
-            
-            if (match) {
-                const numero = match[1];
-                const posicao = expressao.lastIndexOf(numero);
-                const antes = expressao.substring(0, posicao);
-                const depois = expressao.substring(posicao + numero.length);
-                
-                // Substitui o número por ele mesmo / 100
-                // Exemplo: 50% vira (50/100)
-                const novoNumero = `(${numero}/100)`;
-                visor.value = antes + novoNumero + depois;
-            } else {
-                // Se não encontrar número, insere % no final
-                visor.value += '%';
-            }
-        }
-
-        // Limpar tudo
-        function limparVisor() {
-            visor.value = '';
-        }
-
-        // Apagar último caractere
-        function apagarUltimo() {
-            visor.value = visor.value.slice(0, -1);
-        }
-
-        // Calcular expressão
-        function calcular() {
-            try {
-                if (visor.value === '') return;
-
-                let expressao = visor.value;
-
-                // Substitui operadores visuais por operadores JS
-                expressao = expressao.replace(/×/g, '*');
-                expressao = expressao.replace(/÷/g, '/');
-                expressao = expressao.replace(/−/g, '-');
-
-                // Avalia a expressão com segurança
-                const resultado = Function('"use strict"; return (' + expressao + ')')();
-
-                if (!isFinite(resultado)) {
-                    visor.value = '∞';
-                    setTimeout(limparVisor, 2000);
-                    return;
-                }
-
-                // Formata o resultado para não mostrar muitos decimais desnecessários
-                if (Number.isInteger(resultado)) {
-                    visor.value = resultado;
-                } else {
-                    visor.value = parseFloat(resultado.toFixed(10));
-                }
-
-            } catch (error) {
-                visor.value = '💔 erro';
-                setTimeout(limparVisor, 2000);
-            }
-        }
-
-        // ============================================================
-        // 4. SUPORTE A TECLADO
-        // ============================================================
-        document.addEventListener('keydown', function(e) {
-            const key = e.key;
-
-            if (key >= '0' && key <= '9') {
-                e.preventDefault();
-                inserir(key);
-            } else if (key === '.') {
-                e.preventDefault();
-                inserir('.');
-            } else if (key === '+') {
-                e.preventDefault();
-                inserir('+');
-            } else if (key === '-') {
-                e.preventDefault();
-                inserir('−');
-            } else if (key === '*') {
-                e.preventDefault();
-                inserir('×');
-            } else if (key === '/') {
-                e.preventDefault();
-                inserir('÷');
-            } else if (key === '%') {
-                e.preventDefault();
-                inserirPorcentagem();
-            } else if (key === '(') {
-                e.preventDefault();
-                inserir('(');
-            } else if (key === ')') {
-                e.preventDefault();
-                inserir(')');
-            } else if (key === 'Enter') {
-                e.preventDefault();
-                calcular();
-            } else if (key === 'Backspace') {
-                e.preventDefault();
-                apagarUltimo();
-            } else if (key === 'Escape' || key === 'c' || key === 'C') {
-                e.preventDefault();
-                limparVisor();
-            }
-        });
-
-        console.log('💖 Calculadora Isa - Porcentagem funcionando perfeitamente!');
-        console.log('💡 Exemplo: 100 - 10% = 90 | 100 + 10% = 110');
-    </script>
-</body>
-</html>
+        const visorExpressao = document.getElementById('visorExpres
