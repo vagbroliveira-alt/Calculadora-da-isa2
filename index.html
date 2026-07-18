@@ -619,4 +619,182 @@
         // ============================================================
         // 3. CALCULADORA COMPLETA COM VISOR DE EXPRESSÃO
         // ============================================================
-        const visorExpressao = document.getElementById('visorExpres
+        const visorExpressao = document.getElementById('visorExpressao');
+        const visorResultado = document.getElementById('visorResultado');
+
+        // Expressão interna (visível) e expressão para cálculo
+        let expressaoVisivel = '';
+        let expressaoCalculo = '';
+
+        function atualizarVisor() {
+            visorExpressao.textContent = expressaoVisivel;
+        }
+
+        // Inserir valor no visor
+        function inserir(valor) {
+            // Evita começar com operadores inválidos
+            if (expressaoVisivel === '' && ['+', '×', '÷', '%', '*', '/'].includes(valor)) return;
+            
+            // Converte para símbolos visuais bonitos
+            let valVisivel = valor;
+            let valCalculo = valor;
+            
+            if (valVisivel === '*') { valVisivel = '×'; valCalculo = '*'; }
+            else if (valVisivel === '/') { valVisivel = '÷'; valCalculo = '/'; }
+            else if (valVisivel === '-') { valVisivel = '−'; valCalculo = '-'; }
+            
+            // Se for um número, mantém
+            expressaoVisivel += valVisivel;
+            expressaoCalculo += valCalculo;
+            
+            atualizarVisor();
+            // Limpa o resultado anterior quando digita algo novo
+            visorResultado.textContent = '';
+        }
+
+        // Inserir porcentagem
+        function inserirPorcentagem() {
+            if (expressaoVisivel === '') return;
+            
+            // Encontra o último número na expressão
+            const match = expressaoVisivel.match(/([\d.]+)$/);
+            
+            if (match) {
+                const numero = match[1];
+                const posicao = expressaoVisivel.lastIndexOf(numero);
+                const antes = expressaoVisivel.substring(0, posicao);
+                const depois = expressaoVisivel.substring(posicao + numero.length);
+                
+                expressaoVisivel = antes + `(${numero}%)` + depois;
+                
+                // Para o cálculo, converte para (numero/100)
+                const antesCalc = expressaoCalculo.substring(0, posicao);
+                const depoisCalc = expressaoCalculo.substring(posicao + numero.length);
+                expressaoCalculo = antesCalc + `(${numero}/100)` + depoisCalc;
+                
+                atualizarVisor();
+                visorResultado.textContent = '';
+            } else {
+                expressaoVisivel += '%';
+                expressaoCalculo += '%';
+                atualizarVisor();
+            }
+        }
+
+        // Limpar tudo
+        function limparVisor() {
+            expressaoVisivel = '';
+            expressaoCalculo = '';
+            visorResultado.textContent = '';
+            atualizarVisor();
+        }
+
+        // Apagar último caractere
+        function apagarUltimo() {
+            if (expressaoVisivel.length === 0) return;
+            
+            // Remove o último caractere da expressão visível
+            const ultimoChar = expressaoVisivel.charAt(expressaoVisivel.length - 1);
+            
+            // Se o último caractere for ')' de porcentagem, remove tudo de uma vez
+            if (ultimoChar === ')' && expressaoVisivel.includes('(%)')) {
+                // Remove o padrão (numero%)
+                const match = expressaoVisivel.match(/\([\d.]+%\)$/);
+                if (match) {
+                    const remover = match[0];
+                    expressaoVisivel = expressaoVisivel.slice(0, -remover.length);
+                    // Remove da expressão de cálculo também
+                    const matchCalc = expressaoCalculo.match(/\([\d.]+\/100\)$/);
+                    if (matchCalc) {
+                        expressaoCalculo = expressaoCalculo.slice(0, -matchCalc[0].length);
+                    }
+                    atualizarVisor();
+                    visorResultado.textContent = '';
+                    return;
+                }
+            }
+            
+            expressaoVisivel = expressaoVisivel.slice(0, -1);
+            expressaoCalculo = expressaoCalculo.slice(0, -1);
+            atualizarVisor();
+            visorResultado.textContent = '';
+        }
+
+        // Calcular expressão
+        function calcular() {
+            try {
+                if (expressaoVisivel === '' && expressaoCalculo === '') return;
+
+                let expr = expressaoCalculo;
+                
+                // Se não tem operador, apenas mostra o número
+                if (!expr.includes('+') && !expr.includes('-') && !expr.includes('*') && !expr.includes('/')) {
+                    visorResultado.textContent = expr;
+                    return;
+                }
+
+                // Substitui operadores visuais por operadores JS
+                // Usa Function para eval seguro
+                const resultado = new Function(`return (${expr})`)();
+                
+                // Verifica se é um número válido
+                if (isNaN(resultado) || !isFinite(resultado)) {
+                    visorResultado.textContent = 'Erro';
+                    return;
+                }
+                
+                // Formata o resultado
+                const resultadoFormatado = Number.isInteger(resultado) ? 
+                    resultado.toString() : 
+                    resultado.toFixed(8).replace(/\.?0+$/, '');
+                
+                visorResultado.textContent = `= ${resultadoFormatado}`;
+            } catch (e) {
+                visorResultado.textContent = 'Erro';
+                console.log('Erro ao calcular:', e);
+            }
+        }
+
+        // Permitir teclado físico também
+        document.addEventListener('keydown', function(e) {
+            const tecla = e.key;
+            
+            if (tecla >= '0' && tecla <= '9') {
+                inserir(tecla);
+                e.preventDefault();
+            } else if (tecla === '.') {
+                inserir('.');
+                e.preventDefault();
+            } else if (tecla === '+') {
+                inserir('+');
+                e.preventDefault();
+            } else if (tecla === '-') {
+                inserir('−');
+                e.preventDefault();
+            } else if (tecla === '*') {
+                inserir('×');
+                e.preventDefault();
+            } else if (tecla === '/') {
+                inserir('÷');
+                e.preventDefault();
+            } else if (tecla === '%') {
+                inserirPorcentagem();
+                e.preventDefault();
+            } else if (tecla === 'Enter') {
+                calcular();
+                e.preventDefault();
+            } else if (tecla === 'Backspace') {
+                apagarUltimo();
+                e.preventDefault();
+            } else if (tecla === 'Escape') {
+                limparVisor();
+                e.preventDefault();
+            } else if (tecla === '(' || tecla === ')') {
+                inserir(tecla);
+                e.preventDefault();
+            }
+        });
+    </script>
+
+</body>
+</html>
