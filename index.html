@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💖 Isa Calculadora Divina 💖</title>
+    <style>
+        /* ===== RESET E FONTE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Quicksand', system-ui, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #1a0b1f;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ===== FUNDO ANIMADO COM CORAÇÕES ===== */
+        .heart-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            bottom: -100px;
+            font-size: 2rem;
+            animation: floatUp linear infinite;
+            user-select: none;
+            filter: drop-shadow(0 0 10px rgba(255, 80, 160, 0.5));
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(0.6);
+                opacity: 0.3;
+            }
+            50% {
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateY(-120vh) rotate(720deg) scale(1.4);
+                opacity: 0;
+            }
+        }
+
+        /* ===== NOME "ISA" COM ESTILO LUXUOSO ===== */
+        .nome-isa {
+            position: fixed;
+            top: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: 8px;
+            background: linear-gradient(135deg, #ffb6d9, #ff7eb3, #ff4d94, #ff6eb4);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: brilhoNome 4s ease-in-out infinite;
+            text-shadow: 0 0 40px rgba(255, 80, 160, 0.3);
+            font-family: 'Quicksand', 'Segoe UI', sans-serif;
+            padding: 0 30px;
+            backdrop-filter: blur(4px);
+            border-radius: 80px;
+            white-space: nowrap;
+        }
+
+        @keyframes brilhoNome {
+            0%,
+            100% {
+                background-position: 0% 50%;
+                text-shadow: 0 0 40px rgba(255, 80, 160, 0.3);
+            }
+            50% {
+                background-position: 100% 50%;
+                text-shadow: 0 0 80px rgba(255, 80, 160, 0.6), 0 0 120px rgba(255, 50, 150, 0.3);
+            }
+        }
+
+        /* ===== RELÓGIO DIGITAL ===== */
+        .relogio-container {
+            position: fixed;
+            top: 95px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            background: rgba(255, 200, 220, 0.08);
+            backdrop-filter: blur(12px);
+            padding: 12px 32px;
+            border-radius: 80px;
+            border: 1px solid rgba(255, 150, 200, 0.2);
+            box-shadow: 0 8px 40px rgba(255, 80, 160, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            text-align: center;
+            font-size: 1.9rem;
+            font-weight: 500;
+            letter-spacing: 4px;
+            color: #ffe2f0;
+            text-shadow: 0 0 20px #ff8eb5;
+            font-variant-numeric: tabular-nums;
+            min-width: 180px;
+        }
+
+        .relogio-digital {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .relogio-digital span {
+            background: rgba(255, 200, 220, 0.05);
+            padding: 0 8px;
+            border-radius: 16px;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .relogio-digital .dois-pontos {
+            animation: piscar 1s infinite;
+            font-weight: 300;
+            color: #ffb0cf;
+            min-width: 12px;
+            padding: 0;
+            background: transparent;
+        }
+
+        @keyframes piscar {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.15;
+            }
+        }
+
+        /* ===== CALCULADORA COMPLETA E LINDÍSSIMA ===== */
+        .calculadora {
+            position: relative;
+            z-index: 10;
+            background: rgba(25, 10, 24, 0.65);
+            backdrop-filter: blur(24px);
+            padding: 32px 26px 34px;
+            border-radius: 56px;
+            box-shadow:
+                0 30px 80px rgba(255, 80, 160, 0.2),
+                0 0 0 1px rgba(255, 160, 200, 0.12),
+                inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            width: 360px;
+            margin-top: 50px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 180, 210, 0.08);
+        }
+
+        .calculadora:hover {
+            box-shadow: 0 35px 90px rgba(255, 80, 160, 0.3), 0 0 0 1px rgba(255, 160, 200, 0.2);
+        }
+
+        /* ===== VISOR ===== */
+        .visor {
+            width: 100%;
+            height: 90px;
+            background: rgba(12, 5, 12, 0.7);
+            border: 1px solid rgba(255, 150, 200, 0.15);
+            border-radius: 32px;
+            color: #ffd9e8;
+            font-size: 2.8rem;
+            font-weight: 300;
+            text-align: right;
+            padding: 12px 24px;
+            box-sizing: border-box;
+            margin-bottom: 24px;
+            outline: none;
+            box-shadow: inset 0 6px 20px rgba(0, 0, 0, 0.5);
+            letter-spacing: 2px;
+            backdrop-filter: blur(4px);
+            background: rgba(18, 8, 18, 0.5);
+            transition: all 0.2s;
+            font-family: 'Segoe UI', 'Quicksand', sans-serif;
+        }
+
+        .visor:focus {
+            border-color: rgba(255, 130, 180, 0.4);
+            box-shadow: inset 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 80, 160, 0.05);
+        }
+
+        .visor::placeholder {
+            color: rgba(255, 180, 210, 0.2);
+            font-weight: 200;
+        }
+
+        /* ===== GRADE DE BOTÕES ===== */
+        .botoes {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        /* ===== BOTÕES BASE ===== */
+        button {
+            padding: 20px 6px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 44px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            background: rgba(55, 28, 50, 0.5);
+            color: #f5dce8;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 150, 200, 0.06);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            font-family: 'Quicksand', 'Segoe UI', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        button:hover::after {
+            opacity: 1;
+        }
+
+        button:active {
+            transform: scale(0.92);
+            background: rgba(255, 120, 180, 0.15);
+        }
+
+        /* ===== NÚMEROS ===== */
+        button.numero {
+            background: rgba(65, 32, 60, 0.5);
+            border-color: rgba(255, 150, 200, 0.05);
+        }
+
+        button.numero:hover {
+            background: rgba(160, 70, 130, 0.25);
+            border-color: rgba(255, 150, 200, 0.2);
+            box-shadow: 0 0 25px rgba(255, 80, 160, 0.05);
+        }
+
+        /* ===== OPERADORES ===== */
+        button.operador {
+            background: rgba(255, 100, 150, 0.15);
+            color: #ffb6d9;
+            border-color: rgba(255, 100, 150, 0.1);
+            font-weight: 700;
+        }
+
+        button.operador:hover {
+            background: rgba(255, 80, 140, 0.3);
+            border-color: #ff8eb5;
+            box-shadow: 0 0 30px rgba(255, 80, 160, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* ===== BOTÃO LIMPAR (C) ===== */
+        button.limpar {
+            background: rgba(255, 50, 90, 0.2);
+            color: #ff9bb5;
+            border-color: rgba(255, 50, 90, 0.1);
+        }
+
+        button.limpar:hover {
+            background: rgba(255, 40, 80, 0.35);
+            border-color: #ff6b8a;
+            box-shadow: 0 0 30px rgba(255, 40, 80, 0.15);
+        }
+
+        /* ===== IGUAL (DESTAQUE) ===== */
+        button.igual {
+            background: linear-gradient(145deg, #ff7eb3, #e85a8a);
+            color: #fff2f7;
+            border: none;
+            box-shadow: 0 6px 30px rgba(255, 60, 140, 0.35);
+            grid-column: span 2;
+            font-weight: 700;
+            letter-spacing: 3px;
+            font-size: 1.6rem;
+        }
+
+        button.igual:hover {
+            background: linear-gradient(145deg, #ff90c0, #f06a9a);
+            box-shadow: 0 8px 40px rgba(255, 60, 140, 0.5);
+            transform: scale(1.03) translateY(-2px);
+        }
+
+        /* ===== BACKSPACE ===== */
+        button.apagar {
+            background: rgba(180, 80, 140, 0.15);
+            color: #f0c0d8;
+        }
+
+        button.apagar:hover {
+            background: rgba(200, 100, 160, 0.25);
+            border-color: rgba(255, 150, 200, 0.15);
+        }
+
+        /* ===== BOTÃO PORCENTAGEM ===== */
+        button.porcentagem {
+            background: rgba(180, 80, 140, 0.12);
+            color: #f0c0d8;
+        }
+
+        button.porcentagem:hover {
+            background: rgba(200, 100, 160, 0.22);
+        }
+
+        /* ===== BOTÃO PARÊNTESES ===== */
+        button.parenteses {
+            background: rgba(180, 80, 140, 0.1);
+            color: #e8c0d8;
+            font-size: 1.2rem;
+        }
+
+        button.parenteses:hover {
+            background: rgba(200, 100, 160, 0.2);
+        }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 480px) {
+            .calculadora {
+                width: 300px;
+                padding: 22px 16px 26px;
+                border-radius: 40px;
+            }
+
+            .visor {
+                font-size: 2.2rem;
+                height: 75px;
+                padding: 10px 18px;
+                border-radius: 26px;
+            }
+
+            button {
+                padding: 16px 4px;
+                font-size: 1.1rem;
+                border-radius: 36px;
+            }
+
+            .nome-isa {
+                font-size: 2.2rem;
+                top: 16px;
+                letter-spacing: 5px;
+                padding: 0 16px;
+            }
+
+            .relogio-container {
+                top: 78px;
+                font-size: 1.4rem;
+                padding: 8px 18px;
+                min-width: 140px;
+                border-radius: 60px;
+            }
+
+            .relogio-digital span {
+                min-width: 30px;
+                padding: 0 4px;
+            }
+
+            button.igual {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .calculadora {
+                width: 260px;
+                padding: 18px 12px 22px;
+                gap: 10px;
+            }
+
+            .botoes {
+                gap: 10px;
+            }
+
+            button {
+                padding: 14px 2px;
+                font-size: 1rem;
+                border-radius: 30px;
+            }
+
+            .visor {
+                font-size: 1.8rem;
+                height: 65px;
+                padding: 8px 14px;
+            }
+
+            .nome-isa {
+                font-size: 1.8rem;
+                top: 12px;
+                letter-spacing: 3px;
+            }
+
+            .relogio-container {
+                top: 62px;
+                font-size: 1.1rem;
+                padding: 6px 14px;
+                min-width: 110px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== FUNDO DE CORAÇÕES ===== -->
+    <div class="heart-bg" id="heartBg"></div>
+
+    <!-- ===== NOME "ISA" ===== -->
+    <div class="nome-isa">✦ Isa ✦</div>
+
+    <!-- ===== RELÓGIO DIGITAL ===== -->
+    <div class="relogio-container">
+        <div class="relogio-digital" id="relogioDigital">
+            <span id="horas">00</span>
+            <span class="dois-pontos">:</span>
+            <span id="minutos">00</span>
+            <span class="dois-pontos">:</span>
+            <span id="segundos">00</span>
+        </div>
+    </div>
+
+    <!-- ===== CALCULADORA COMPLETA ===== -->
+    <div class="calculadora">
+        <input type="text" class="visor" id="visor" readonly placeholder="0">
+
+        <div class="botoes">
+            <!-- Linha 1: C, ⌫, %, ÷ -->
+            <button class="limpar" onclick="limparVisor()">C</button>
+            <button class="apagar" onclick="apagarUltimo()">⌫</button>
+            <button class="porcentagem" onclick="inserirPorcentagem()">%</button>
+            <button class="operador" onclick="inserir('÷')">÷</button>
+
+            <!-- Linha 2: 7, 8, 9, × -->
+            <button class="numero" onclick="inserir('7')">7</button>
+            <button class="numero" onclick="inserir('8')">8</button>
+            <button class="numero" onclick="inserir('9')">9</button>
+            <button class="operador" onclick="inserir('×')">×</button>
+
+            <!-- Linha 3: 4, 5, 6, − -->
+            <button class="numero" onclick="inserir('4')">4</button>
+            <button class="numero" onclick="inserir('5')">5</button>
+            <button class="numero" onclick="inserir('6')">6</button>
+            <button class="operador" onclick="inserir('−')">−</button>
+
+            <!-- Linha 4: 1, 2, 3, + -->
+            <button class="numero" onclick="inserir('1')">1</button>
+            <button class="numero" onclick="inserir('2')">2</button>
+            <button class="numero" onclick="inserir('3')">3</button>
+            <button class="operador" onclick="inserir('+')">+</button>
+
+            <!-- Linha 5: 0, ., ( , ) -->
+            <button class="numero" onclick="inserir('0')">0</button>
+            <button class="ponto" onclick="inserir('.')">.</button>
+            <button class="parenteses" onclick="inserir('(')">(</button>
+            <button class="parenteses" onclick="inserir(')')">)</button>
+
+            <!-- Linha 6: = (ocupa 2 colunas) -->
+            <button class="igual" onclick="calcular()">=</button>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // 1. CORAÇÕES ANIMADOS (GERADOR CONTÍNUO)
+        // ============================================================
+        (function criarCoracoes() {
+            const bg = document.getElementById('heartBg');
+            const emojis = ['♥', '❤️', '💖', '💗', '💕', '🌸', '✨', '💓', '🩷', '💞', '💝', '🌟'];
+            const numCoracoes = 40;
+
+            for (let i = 0; i < numCoracoes; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.fontSize = (1.2 + Math.random() * 3.0) + 'rem';
+                heart.style.animationDuration = (14 + Math.random() * 22) + 's';
+                heart.style.animationDelay = (Math.random() * 25) + 's';
+                heart.style.opacity = 0.25 + Math.random() * 0.6;
+                const rotacao = Math.random() * 40 - 20;
+                heart.style.transform = `rotate(${rotacao}deg)`;
+                bg.appendChild(heart);
+            }
+
+            // Corações especiais maiores
+            const especiais = ['💖', '💗', '💞', '🩷'];
+            for (let i = 0; i < 6; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = especiais[i % especiais.length];
+                heart.style.left = (10 + Math.random() * 80) + '%';
+                heart.style.fontSize = (3.0 + Math.random() * 2.0) + 'rem';
+                heart.style.animationDuration = (20 + Math.random() * 18) + 's';
+                heart.style.animationDelay = (Math.random() * 30) + 's';
+                heart.style.opacity = 0.3 + Math.random() * 0.4;
+                bg.appendChild(heart);
+            }
+        })();
+
+        // ============================================================
+        // 2. RELÓGIO DIGITAL
+        // ============================================================
+        function atualizarRelogio() {
+            const agora = new Date();
+            const h = String(agora.getHours()).padStart(2, '0');
+            const m = String(agora.getMinutes()).padStart(2, '0');
+            const s = String(agora.getSeconds()).padStart(2, '0');
+
+            document.getElementById('horas').textContent = h;
+            document.getElementById('minutos').textContent = m;
+            document.getElementById('segundos').textContent = s;
+        }
+
+        atualizarRelogio();
+        setInterval(atualizarRelogio, 1000);
+
+        // ============================================================
+        // 3. CALCULADORA COMPLETA COM PORCENTAGEM FUNCIONAL
+        // ============================================================
+        const visor = document.getElementById('visor');
+
+        // Inserir valor no visor
+        function inserir(valor) {
+            // Evita começar com operadores inválidos
+            if (visor.value === '' && ['+', '×', '÷', '%', '*', '/'].includes(valor)) return;
+            // Substitui operadores visuais por operadores JS internamente
+            let val = valor;
+            if (val === '×') val = '*';
+            if (val === '÷') val = '/';
+            if (val === '−') val = '-';
+            visor.value += val;
+        }
+
+        // Inserir porcentagem - agora funcional!
+        function inserirPorcentagem() {
+            // Pega o número atual no visor
+            let expressao = visor.value;
+            
+            // Se estiver vazio, não faz nada
+            if (expressao === '') return;
+            
+            // Encontra o último número na expressão
+            // Exemplo: "100+50" -> último número é "50"
+            // Exemplo: "200-30" -> último número é "30"
+            const match = expressao.match(/([\d.]+)$/);
+            
+            if (match) {
+                const numero = match[1];
+                const posicao = expressao.lastIndexOf(numero);
+                const antes = expressao.substring(0, posicao);
+                const depois = expressao.substring(posicao + numero.length);
+                
+                // Substitui o número por ele mesmo / 100
+                // Exemplo: 50% vira (50/100)
+                const novoNumero = `(${numero}/100)`;
+                visor.value = antes + novoNumero + depois;
+            } else {
+                // Se não encontrar número, insere % no final
+                visor.value += '%';
+            }
+        }
+
+        // Limpar tudo
+        function limparVisor() {
+            visor.value = '';
+        }
+
+        // Apagar último caractere
+        function apagarUltimo() {
+            visor.value = visor.value.slice(0, -1);
+        }
+
+        // Calcular expressão
+        function calcular() {
+            try {
+                if (visor.value === '') return;
+
+                let expressao = visor.value;
+
+                // Substitui operadores visuais por operadores JS
+                expressao = expressao.replace(/×/g, '*');
+                expressao = expressao.replace(/÷/g, '/');
+                expressao = expressao.replace(/−/g, '-');
+
+                // Avalia a expressão com segurança
+                const resultado = Function('"use strict"; return (' + expressao + ')')();
+
+                if (!isFinite(resultado)) {
+                    visor.value = '∞';
+                    setTimeout(limparVisor, 2000);
+                    return;
+                }
+
+                // Formata o resultado para não mostrar muitos decimais desnecessários
+                if (Number.isInteger(resultado)) {
+                    visor.value = resultado;
+                } else {
+                    visor.value = parseFloat(resultado.toFixed(10));
+                }
+
+            } catch (error) {
+                visor.value = '💔 erro';
+                setTimeout(limparVisor, 2000);
+            }
+        }
+
+        // ============================================================
+        // 4. SUPORTE A TECLADO
+        // ============================================================
+        document.addEventListener('keydown', function(e) {
+            const key = e.key;
+
+            if (key >= '0' && key <= '9') {
+                e.preventDefault();
+                inserir(key);
+            } else if (key === '.') {
+                e.preventDefault();
+                inserir('.');
+            } else if (key === '+') {
+                e.preventDefault();
+                inserir('+');
+            } else if (key === '-') {
+                e.preventDefault();
+                inserir('−');
+            } else if (key === '*') {
+                e.preventDefault();
+                inserir('×');
+            } else if (key === '/') {
+                e.preventDefault();
+                inserir('÷');
+            } else if (key === '%') {
+                e.preventDefault();
+                inserirPorcentagem();
+            } else if (key === '(') {
+                e.preventDefault();
+                inserir('(');
+            } else if (key === ')') {
+                e.preventDefault();
+                inserir(')');
+            } else if (key === 'Enter') {
+                e.preventDefault();
+                calcular();
+            } else if (key === 'Backspace') {
+                e.preventDefault();
+                apagarUltimo();
+            } else if (key === 'Escape' || key === 'c' || key === 'C') {
+                e.preventDefault();
+                limparVisor();
+            }
+        });
+
+        console.log('💖 Calculadora Isa - Porcentagem funcionando perfeitamente!');
+        console.log('💡 Exemplo: 100 - 10% = 90 | 100 + 10% = 110');
+    </script>
+</body>
+</html>
